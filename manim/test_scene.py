@@ -1,6 +1,7 @@
 from manimlib import *
 import numpy as np
 
+
 class GraphExample(Scene):
     def construct(self):
         axes = Axes((-3, 10), (-1, 8))
@@ -13,7 +14,6 @@ class GraphExample(Scene):
             lambda x: 2 * math.sin(x),
             color=BLUE,
         )
-        new_graph = axes
         # By default, it draws it so as to somewhat smoothly interpolate
         # between sampled points (x, f(x)).  If the graph is meant to have
         # a corner, though, you can set use_smoothing to False
