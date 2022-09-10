@@ -1,0 +1,4 @@
+# This files should be ignored by the git manager
+
+__pycache__/
+media/
