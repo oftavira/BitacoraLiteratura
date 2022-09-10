@@ -1,0 +1,11 @@
+# This files should be ignored by the git manager
+
+__pycache__/
+
+# TODO: change this to a sub directories ignore
+
+*.dvi
+*.aux
+*.log
+*.tex
+*.pyc
