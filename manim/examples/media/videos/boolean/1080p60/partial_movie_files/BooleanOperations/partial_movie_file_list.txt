@@ -1,0 +1,10 @@
+# This file is used internally by FFMPEG.
+file 'file:/home/jupyter/Desktop/ProyectoA/manim/examples/media/videos/boolean/1080p60/partial_movie_files/BooleanOperations/450974505_141623787_223132457.mp4'
+file 'file:/home/jupyter/Desktop/ProyectoA/manim/examples/media/videos/boolean/1080p60/partial_movie_files/BooleanOperations/34786186_4106618398_1772143430.mp4'
+file 'file:/home/jupyter/Desktop/ProyectoA/manim/examples/media/videos/boolean/1080p60/partial_movie_files/BooleanOperations/34786186_680376794_1256949363.mp4'
+file 'file:/home/jupyter/Desktop/ProyectoA/manim/examples/media/videos/boolean/1080p60/partial_movie_files/BooleanOperations/34786186_2868184883_1119025152.mp4'
+file 'file:/home/jupyter/Desktop/ProyectoA/manim/examples/media/videos/boolean/1080p60/partial_movie_files/BooleanOperations/34786186_3456621140_3554485400.mp4'
+file 'file:/home/jupyter/Desktop/ProyectoA/manim/examples/media/videos/boolean/1080p60/partial_movie_files/BooleanOperations/34786186_180371540_696990162.mp4'
+file 'file:/home/jupyter/Desktop/ProyectoA/manim/examples/media/videos/boolean/1080p60/partial_movie_files/BooleanOperations/34786186_1110193960_1062973977.mp4'
+file 'file:/home/jupyter/Desktop/ProyectoA/manim/examples/media/videos/boolean/1080p60/partial_movie_files/BooleanOperations/34786186_1540243499_385588103.mp4'
+file 'file:/home/jupyter/Desktop/ProyectoA/manim/examples/media/videos/boolean/1080p60/partial_movie_files/BooleanOperations/34786186_2271482767_3635541374.mp4'
