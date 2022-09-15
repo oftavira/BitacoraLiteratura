@@ -1,6 +1,6 @@
 from manim import *
 
-class BooleanOperations(Scene):
+""" class BooleanOperations(Scene):
     def construct(self):
         ellipse1 = Ellipse(
             width=4.0, height=5.0, fill_opacity=0.5, color=BLUE, stroke_width=10
@@ -32,3 +32,54 @@ class BooleanOperations(Scene):
         self.play(d.animate.scale(0.3).next_to(u, LEFT, buff=difference_text.height * 3.5))
         difference_text.next_to(d, UP)
         self.play(FadeIn(difference_text))
+ """
+# class Lasers(Scene):
+#     def construct(self):
+#         # difference_text = Text("Difference", font_size=23)
+#         # comp_text       = Text("Comp", font_size=23)
+#         # self.wait(2)
+#         # comp_text.next_to(difference_text, DOWN)
+#         # self.play(FadeIn(difference_text))
+#         # self.play(Write(comp_text))
+#         # self.wait(2)
+#         p = NumberPlane()
+#         self.play(FadeIn(p))
+#         self.wait(2)
+#         comp_text = Text("Comp", font_size=23)
+#         self.play(Write(comp_text))
+#         self.wait(2)
+#         self.play(p.scale(0.2))
+#         self.wait(2)
+
+# def graphasvgroup(arr,size):
+
+
+class VectorArrow(Scene):
+    def construct(self):
+        dot = Dot(ORIGIN) #
+        dot2= Dot([0,1,0], 0.01)
+        arrUP = Arrow(ORIGIN, [0, 2, 0], buff=0, stroke_width=1, max_tip_length_to_length_ratio=0.1) #
+        arrDO = Arrow(ORIGIN, [2, 0, 0], buff=0, stroke_width=1, max_tip_length_to_length_ratio=0.1) #
+        self.play(FadeIn(dot))
+        self.wait(2)
+        self.play(GrowArrow(arrUP))
+        self.wait(2)
+        self.play(GrowArrow(arrDO))
+        self.wait(2)
+        g = VGroup(dot, arrUP, arrDO)
+        self.play(FadeOut(g))
+        self.wait(1)
+        self.play(FadeIn(dot2))
+        self.wait(1)
+        circle = Circle(radius=1, color=BLUE)
+        dot = Dot()
+        dot2 = dot.copy().shift(RIGHT)
+        self.add(dot)
+        self.play(FadeOut(dot))
+        line = Line([3, 0, 0], [5, 0, 0])
+        self.add(line)
+        self.play(GrowFromCenter(circle))
+        self.play(Transform(dot, dot2))
+        self.play(MoveAlongPath(dot, circle), run_time=2, rate_func=linear)
+        self.play(Rotating(dot, about_point=[2, 0, 0]), run_time=1.5)
+        self.wait()
