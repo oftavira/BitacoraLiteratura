@@ -3,7 +3,7 @@ from manim import *
 class CreateCircle(Scene):
     def construct(self):
         # Configurando el fondo
-        self.camera.background_color = "#6c1d45"
+        self.camera.background_color = "#071F37"
 
         # Test colors
         col1 = "#87c2a5"
