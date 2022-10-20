@@ -1,6 +1,6 @@
 #Acq. time (s)=	20
 #Accumulations=	2
-#Range (cm-¹)=	50...4000
+#Range (cm-ï¿½)=	50...4000
 #Windows=	3
 #Autofocus=	Off
 #AutoExposure=	Off
