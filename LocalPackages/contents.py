@@ -60,7 +60,7 @@ class RamanSpectraGroup(object):
         folder = '/' + folder
         path   = os.getcwd()
         # TODO: Verificar si es posible discriminar con - if file in files - para evitar la duplicacion de archivos
-        self.files.append(path + folder + '/' + f for f in os.listdir(path + folder))
+        self.files  = [path + folder + '/' + f for f in os.listdir(path + folder)]
         self.getFiles(self.files)
         return;
     
