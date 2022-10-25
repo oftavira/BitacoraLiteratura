@@ -1,4 +1,4 @@
-from manimlib import *
+from manim import *
 import numpy as np
 
 # To watch one of these scenes, run the following:
@@ -47,10 +47,8 @@ class OpeningManimExample(Scene):
         moving_c_grid.prepare_for_nonlinear_transform()
         c_grid.set_stroke(BLUE_E, 1)
         c_grid.add_coordinate_labels(font_size=24)
-        complex_map_words = TexText("""
-            Or thinking of the plane as $\\mathds{C}$,\\\\
-            this is the map $z \\rightarrow z^2$
-        """)
+        
+        
         complex_map_words.to_corner(UR)
         complex_map_words.set_stroke(BLACK, 5, background=True)
 
