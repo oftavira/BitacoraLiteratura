@@ -134,3 +134,17 @@ class Presentacion(Scene):
         self.clear()
         self.play(Write(obsmatrix))
         self.wait(2)
+
+class TempScene(Scene):
+
+  def construct(self):
+      s = Square()
+      self.play(FadeIn(s))
+      self.wait(2)
+      c = Circle()
+      self.play(FadeIn(c))
+      animate_gif(self,'fourier_conv.gif', scale = 2, modify = lambda frm: frm.to_corner(UR))
+      self.wait(2)
+      t = Triangle()
+      self.play(FadeIn(t))
+      
