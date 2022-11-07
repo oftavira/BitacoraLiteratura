@@ -1,0 +1,4 @@
+Este documento es enviado desde CLI, probando la compatibilidad con la terminal.
+
+Se ejecuta:
+git add -A && git commit -m "Probando push desde la terminal"
