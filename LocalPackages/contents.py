@@ -1,92 +1,122 @@
-# Objetivo : Empaquetar los espectros Raman en un Array para su decomposición en valores singulares
-# 
-# El cálculo debe realizarse con la matriz M y la transpuesta MT
-
-import matplotlib.pyplot as plt
 import os
-
-
-
-# Definimos la Clase base "RamanSpectra" que debera contener información relacionada con la medicion
-# TODO: Podemos añadir un mapeo de intensidades para caracterizar la superficie de medicion
-# TODO: Añadir otros parametros de informacion para la muestra o espectro
+import sys
+import numpy as np
+import matplotlib.pyplot as plt
+import scaleogram as scg
+from skimage import io
 
 class RamanSpectra(object):
-    """
-    Raman Spectra es un objeto que contiene los puntos de una medicion, es decir, cada
-    objeto tiene un atributo correspondiente al eje x, otro para el eje y asi como dos atributos
-    mas para la información de la medición
-    """
 
-    def __init__(self,data,info,r_id):
-        self.r_id = r_id
-        self.data = data
-        self.info = info
-        self.x = self.data[0]
-        self.y = self.data[1]
+    def __init__(self, pathFile, upLevels = 0):
+        self.pathFile = pathFile
+        self.name = pathFile.split('/')[-1]
+        self.readFromLocation(pathFile, upLevels)
+        # After this execution the object has the following properties
+        # self ... content, info, spx, spy
         return;
     
     def __str__(self):
-        return 'raman_s at +++ ' + self.r_id;
+        return 'raman_s at +++ ' + self.docLoc;
 
     def __repr__(self):
-        return 'raman_s at ... ' + self.r_id;
+        return 'raman_s at ... ' + self.docLoc;
     
-    def plot(self):
-        fig, ax = plt.subplots()
-        ax.plot(self.x, self.y)
-        ax.set_title(self.info)
+    def scaleogram(self, scaleLim = 1001):
+        time   = np.array(self.spx)
+        data   =  np.array(self.spy)  # insert a gaussian at the center
+        scales = np.arange(1,scaleLim) # scaleogram with 100 rows
+        cwt    =  scg.CWT(time, data, scales) # compute ONCE the Continuous Wavelet Transform
+        return io.imshow(cwt.coefs)
 
+    def readFromLocation(self, pathFile, upLevels):
+        count = 0
+        initialPath = os.getcwd().split('/')[1:]
+        # TODO: Raise error when upLevels > treeDepth
+        while count  < upLevels:
+            initialPath.pop()
+            count +=1
+        docLoc = '/'+ '/'.join(initialPath)+pathFile
+        self.docLoc = docLoc
 
-
-class RamanSpectraGroup(object):
-
-    def __init__(self):
-        # Un Grupo de espectros Raman será una lista de Objectos RamanSpectra
-        # con los atributos de información (info) y datos de la medicion (data), inicialmente el atributo 
-        # spectra es una lista vacía
-
-        # TODO: Es posible añadir una opcion que distinga cuando un espectro ya ha sido añadido al grupo de
-        # espectros Raman
-        self.saved_memo = 0
-        self.files = []
-        self.ramanSpectra = []
-        return;
-
-    def getFilesFromFolder(self, folder):
-        # NOTE: Este método no verifica si los archivos en el folder seleccionado ya se encuentran en self.spectra
-        # el método construye una lista de archivos en el directorio seleccionado y llama al método
-        # getDetailedSpectra con una lista que pasa a su argumento (self.files)
-        folder = '/' + folder
-        path   = os.getcwd()
-        # TODO: Verificar si es posible discriminar con - if file in files - para evitar la duplicacion de archivos
-        self.files  = [path + folder + '/' + f for f in os.listdir(path + folder)]
-        self.getFiles(self.files)
-        return;
-    
-    def getFilesFromPath(self, path):
-        cwd = os.getcwd().split('/')[:-1]
-        cwd = '/'.join(cwd)
-        self.files  = [ cwd + path + '/' + f for f in os.listdir(cwd + path)]
-        self.getFiles(self.files)
-        return;
-
-    def getFiles(self, targets):
-        assert(type(targets)==list)
-        for file in targets:
-            with open(file, 'r', encoding = 'unicode_escape') as tempfile:
-                content = tempfile.read()
-                info    = content.split('#Acquired')[1].split('\n')[0].replace("=\t",'')
-                values  = content.split('#Acquired')[1].split('\n')[1:-1]
-                spx=[]
-                spy=[]
-                for string_values in values:
+        with open(docLoc, 'r', encoding = 'unicode_escape') as tempfile:
+                self.content = tempfile.read()
+                self.dets    = self.content.split('#Acquired')[0]
+                self.info    = self.content.split('#Acquired')[1].split('\n')[0].replace("=\t",'')
+                _values  = self.content.split('#Acquired')[1].split('\n')[1:-1]
+                self.spx=[]
+                self.spy=[]
+                for values in _values:
                     try:
-                        x = float(string_values.split('\t')[0])
-                        y = float(string_values.split('\t')[1])
+                        x = float(values.split('\t')[0])
+                        y = float(values.split('\t')[1])
                     except:
                         print('Ocurrio un error al hacer la lectura de los archivos')
-                    spx.append(x)
-                    spy.append(y)
-                self.ramanSpectra.append(RamanSpectra((spx,spy), info ,file))
+                    self.spx.append(x)
+                    self.spy.append(y)
         return;
+    
+    
+    def plot(self, darkMode=True):
+        if darkMode:
+            with plt.rc_context({'xtick.color':'white', 'ytick.color':'white', 'axes.facecolor':'1D0B3A'}):
+                fig, ax = plt.subplots()
+                ax.plot(self.spx, self.spy)
+                ax.set_title(self.info)
+        else:
+            fig, ax = plt.subplots()
+            ax.plot(self.spx, self.spy)
+            ax.set_title(self.info)
+    
+    def altPlot(self,xinit = 0, yinit = 0, xlim = 6001, ylim = 4001, plotSize = (16,8), xMstep=500,xmstep=100,yMstep=500,ymstep=100):
+        with plt.rc_context({'xtick.color':'black', 'ytick.color':'black'}):
+            fig, ax = plt.subplots()
+            fig.set_size_inches(plotSize[0],plotSize[1])
+
+            ss = self.dets.replace(' ','').replace('\t','').split('\n')
+
+            p1, q1, text1 = -700, 2800, ss[0]
+            p2, q2, text2 = -700, 2400, ss[1]
+            p3, q3, text3 = -700, 2000, ss[2]
+            p4, q4, text4 = -700, 1600, ss[16]
+            p5, q5, text5 = -700, 1200, ss[17]
+            p6, q6, text6 = -700, 800,  ss[18]
+            p7, q7, text7 = -700, 400,  ss[19]
+            p8, q8, text8 = -700, 0, self.info
+            
+            ax.text(p1, q1, text1)
+            ax.text(p2, q2, text2)
+            ax.text(p3, q3, text3)
+            ax.text(p4, q4, text4)
+            ax.text(p5, q5, text5)
+            ax.text(p6, q6, text6)
+            ax.text(p7, q7, text7)
+            ax.text(p8, q8, text8)
+
+            #More Parameters
+            # color = 'black'
+            ax.plot(self.spx, self.spy, color= 'black',linewidth = 0.6)
+            plt.fill_between(self.spx,self.spy, color='b', alpha=0.05)
+            plt.ylim([yinit, ylim])
+            plt.xlim([xinit, xlim])
+            plt.xlabel(r'$Raman \: Shift (cm^{-1})$', fontsize=20)
+            plt.ylabel(r'$Intensity \: (A.U.)$', fontsize=20)
+
+            ax.set_title(self.name)
+            
+            major_ticks = np.arange(xinit, xlim, xMstep)
+            minor_ticks = np.arange(xinit, xlim, xmstep)
+
+            ymajor_ticks = np.arange(yinit, ylim, yMstep)
+            yminor_ticks = np.arange(yinit, ylim, ymstep)
+
+            ax.set_yticks(ymajor_ticks)
+            ax.set_yticks(yminor_ticks, minor=True)
+
+            ax.set_xticks(major_ticks)
+            ax.set_xticks(minor_ticks, minor=True)
+            
+            # Or if you want different settings for the grids:
+            ax.grid(which='minor', alpha=0.4)
+            ax.grid(which='major', alpha=0.8)
+            plt.savefig('test.jpeg',dpi=900)
+            plt.subplots_adjust()
