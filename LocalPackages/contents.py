@@ -1,4 +1,5 @@
 import os
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 import scaleogram as scg
@@ -25,7 +26,22 @@ class RamanSpectra(object):
         data   =  np.array(self.spy)  # insert a gaussian at the center
         scales = np.arange(1,scaleLim) # scaleogram with 100 rows
         cwt    =  scg.CWT(time, data, scales) # compute ONCE the Continuous Wavelet Transform
-        return io.imshow(cwt.coefs)
+        return scg.cws(cwt)
+    
+    def scaleogram2(self, scaleLim = 1001):
+        time   = np.array(self.spx)
+        data   =  np.array(self.spy)  # insert a gaussian at the center
+        scales = np.arange(1,scaleLim) # scaleogram with 100 rows
+        cwt    =  np.abs(scg.CWT(time, data, scales).coefs) # compute ONCE the Continuous Wavelet Transform
+        fig, ax = plt.subplots()
+        fig.set_size_inches(16,8)
+        ax.imshow(cwt, cmap='viridis')
+        ax.set_title(self.name)
+        plt.savefig(self.name+'.jpeg',dpi=900)
+        plt.subplots_adjust()
+
+
+
 
     def readFromLocation(self, pathFile, upLevels):
         count = 0
@@ -34,7 +50,7 @@ class RamanSpectra(object):
         while count  < upLevels:
             initialPath.pop()
             count +=1
-        docLoc = '/'+ '/'.join(initialPath)+pathFile
+        docLoc = '/'+ '/'.join(initialPath)+'/'+pathFile
         self.docLoc = docLoc
 
         with open(docLoc, 'r', encoding = 'unicode_escape') as tempfile:
@@ -66,21 +82,21 @@ class RamanSpectra(object):
             ax.plot(self.spx, self.spy)
             ax.set_title(self.info)
     
-    def altPlot(self,xinit = 0, yinit = 0, xlim = 6001, ylim = 4001, plotSize = (16,8), xMstep=500,xmstep=100,yMstep=500,ymstep=100):
+    def altPlot(self,xinit = 0, labelGap = -1200, yinit = 0, xlim = 6001, ylim = 4001, plotSize = (16,8), xMstep=500,xmstep=100,yMstep=500,ymstep=100):
         with plt.rc_context({'xtick.color':'black', 'ytick.color':'black'}):
             fig, ax = plt.subplots()
             fig.set_size_inches(plotSize[0],plotSize[1])
 
             ss = self.dets.replace(' ','').replace('\t','').split('\n')
 
-            p1, q1, text1 = -700, 2800, ss[0]
-            p2, q2, text2 = -700, 2400, ss[1]
-            p3, q3, text3 = -700, 2000, ss[2]
-            p4, q4, text4 = -700, 1600, ss[16]
-            p5, q5, text5 = -700, 1200, ss[17]
-            p6, q6, text6 = -700, 800,  ss[18]
-            p7, q7, text7 = -700, 400,  ss[19]
-            p8, q8, text8 = -700, 0, self.info
+            p1, q1, text1 = labelGap, 2800, ss[0]
+            p2, q2, text2 = labelGap, 2400, ss[1]
+            p3, q3, text3 = labelGap, 2000, ss[2]
+            p4, q4, text4 = labelGap, 1600, ss[16]
+            p5, q5, text5 = labelGap, 1200, ss[17]
+            p6, q6, text6 = labelGap, 800,  ss[18]
+            p7, q7, text7 = labelGap, 400,  ss[19]
+            p8, q8, text8 = labelGap, 0, self.info
             
             ax.text(p1, q1, text1)
             ax.text(p2, q2, text2)
